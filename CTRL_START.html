@@ -658,21 +658,24 @@ function tintOf(hex) {
   return `rgba(${r}, ${g}, ${b}, 0.1)`;
 }
 
+function LensPill({ lens, ink }) {
+  if (!lens) return null;
+  return el(
+    "span",
+    {
+      className: "inline-block text-[10px] uppercase tracking-[0.1em] font-semibold rounded-full px-2.5 py-1 mb-2",
+      style: { background: ink, color: "#fff" },
+    },
+    lens,
+  );
+}
+
 function Annotation({ lens, text, ink }) {
   if (!lens && !text) return null;
   return el(
     "div",
     { className: "mt-4 rounded-2xl p-3.5", style: { background: tintOf(ink) } },
-    lens
-      ? el(
-          "span",
-          {
-            className: "inline-block text-[10px] uppercase tracking-[0.1em] font-semibold rounded-full px-2.5 py-1 mb-2",
-            style: { background: ink, color: "#fff" },
-          },
-          lens,
-        )
-      : null,
+    el(LensPill, { lens: lens, ink: ink }),
     text ? el("p", { className: "text-[13px] leading-relaxed", style: { color: K, opacity: 0.8 } }, text) : null,
   );
 }
@@ -693,7 +696,13 @@ function Disclosure({ label, ink, children }) {
       label,
       el("span", { style: { opacity: 0.6 } }, open ? "−" : "+"),
     ),
-    open ? el("div", { className: "pop-in" }, children) : null,
+    open
+      ? el(
+          "div",
+          { className: "pop-in mt-3 rounded-2xl p-4", style: { background: tintOf(ink) } },
+          children,
+        )
+      : null,
   );
 }
 
@@ -718,8 +727,9 @@ function PersonEntry({ person, index, ink }) {
         el(
           Disclosure,
           { label: "Why this belongs here", ink: ink },
-          el("p", { className: "text-sm leading-relaxed mt-2", style: { color: K, opacity: 0.85 } }, person.why),
-          el(Annotation, { lens: person.acdeg.lens, text: person.acdeg.text, ink: ink }),
+          el("p", { className: "text-sm leading-relaxed mb-3", style: { color: K, opacity: 0.9 } }, person.why),
+          el(LensPill, { lens: person.acdeg.lens, ink: ink }),
+          el("p", { className: "text-[13px] leading-relaxed", style: { color: K, opacity: 0.75 } }, person.acdeg.text),
         ),
       ),
     ),
