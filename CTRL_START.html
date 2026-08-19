@@ -1236,6 +1236,78 @@ const ROOM_TABS = [
   { key: "act", label: "Organisations" },
 ];
 
+const ROOM_ORDER = ["maker", "caregiver", "seeker", "challenger", "bridger"];
+
+function RoomsTeaser({ onExplore }) {
+  return el(
+    "div",
+    { className: "mt-12 pt-8 max-w-sm", style: { borderTop: HAIRLINE } },
+    el("p", { className: "text-[11px] uppercase tracking-[0.15em] font-semibold mb-3", style: { color: J } }, "The Other Rooms"),
+    el("p", { className: "font-serif italic text-xl leading-snug mb-5", style: { color: K } }, "You don't have to stay in your room."),
+    el(
+      "button",
+      {
+        onClick: onExplore,
+        className: "text-sm uppercase tracking-[0.14em] font-semibold",
+        style: { color: K, background: "none", border: "none", padding: "8px 0", cursor: "pointer" },
+      },
+      "Explore the other rooms  →",
+    ),
+  );
+}
+
+function RoomDoorEntry({ roomKey, isActive, isFirst }) {
+  const room = n[roomKey];
+  const ink = ARCHETYPE_COLORS[roomKey].ink;
+  return el(
+    "div",
+    { className: "py-6 flex items-center gap-4", style: { borderTop: isFirst ? "none" : HAIRLINE } },
+    room.doorImage
+      ? el(
+          "div",
+          { className: "flex-shrink-0", style: { width: 60, height: 84, overflow: "hidden" } },
+          el("img", {
+            src: room.doorImage,
+            alt: `${room.label} door`,
+            style: { width: "100%", height: "100%", objectFit: "cover" },
+          }),
+        )
+      : null,
+    el(
+      "div",
+      { className: "min-w-0" },
+      el(
+        "div",
+        { className: "flex items-baseline gap-2 flex-wrap mb-1" },
+        el("h3", { className: "font-serif text-2xl leading-none", style: { color: ink } }, room.label),
+        isActive
+          ? el("span", { className: "text-[10px] uppercase tracking-[0.12em] font-semibold", style: { color: J } }, "· your room")
+          : null,
+      ),
+      el("p", { className: "font-serif italic text-base leading-snug", style: { color: K, opacity: 0.8 } }, `“${room.question}”`),
+    ),
+  );
+}
+
+function RoomsGallery({ activeKeys, onBack }) {
+  return el(
+    "div",
+    null,
+    el(
+      "button",
+      {
+        onClick: onBack,
+        className: "text-xs uppercase tracking-[0.14em] font-semibold mb-8",
+        style: { color: J, background: "none", border: "none", padding: "8px 0", cursor: "pointer" },
+      },
+      "←  Back to your room",
+    ),
+    el("p", { className: "text-[11px] uppercase tracking-[0.15em] font-semibold mb-2", style: { color: J } }, "The Rooms"),
+    el("h2", { className: "font-serif text-3xl leading-tight mb-8 max-w-sm", style: { color: K } }, "Five ways of seeing the world."),
+    ROOM_ORDER.map((rk, idx) => el(RoomDoorEntry, { key: rk, roomKey: rk, isActive: activeKeys.includes(rk), isFirst: idx === 0 })),
+  );
+}
+
 function ResultExplorer({ doors }) {
   const [activeDoor, setActiveDoor] = t(doors[0]);
   const [tab, setTab] = t("people");
@@ -1344,7 +1416,8 @@ function r() {
     [V, N] = t(null),
     [Q, R] = t(!1),
     I = l(null),
-    [u, W] = t("");
+    [u, W] = t(""),
+    [roomsOpen, setRoomsOpen] = t(!1);
   e(() => {
     const t = () => R(!!document.fullscreenElement);
     return (
@@ -1378,11 +1451,13 @@ function r() {
         h({}),
         T(m.map((t) => ({ ...t, a: b(t.a) }))),
         N(null),
+        setRoomsOpen(!1),
         r("question"));
     },
     w = () => {
       V ||
-        ("result" === S
+        (setRoomsOpen(!1),
+        "result" === S
           ? (r("question"), y(m.length - 1))
           : E > 0
             ? y((t) => t - 1)
@@ -1687,6 +1762,14 @@ function r() {
               React.createElement(
                 "div",
                 { className: "my-auto" },
+                roomsOpen
+                  ? React.createElement(RoomsGallery, {
+                      activeKeys: d,
+                      onBack: () => setRoomsOpen(!1),
+                    })
+                  : React.createElement(
+                      React.Fragment,
+                      null,
                 React.createElement(
                   "p",
                   {
@@ -1763,6 +1846,7 @@ function r() {
                   "This doesn't define you. It simply gives you a place to begin.",
                 ),
                 React.createElement(ResultExplorer, { doors: d }),
+                React.createElement(RoomsTeaser, { onExplore: () => setRoomsOpen(!0) }),
                 React.createElement(
                   "p",
                   {
@@ -1796,6 +1880,7 @@ function r() {
                   },
                   "Change my answers",
                 ),
+                    ),
               ),
             ),
           ),
