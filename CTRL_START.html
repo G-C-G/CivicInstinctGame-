@@ -1415,6 +1415,10 @@ function ResultExplorer({ doors }) {
   e(() => {
     if (!doors.includes(activeDoor)) setActiveDoor(doors[0]);
   }, [doors]);
+  e(() => {
+    const scroller = document.querySelector(".overflow-y-auto");
+    if (scroller) scroller.scrollTop = 0;
+  }, [activeDoor, tab]);
   const content = ROOM_CONTENT[activeDoor];
   const ink = ARCHETYPE_COLORS[activeDoor].ink;
   const roomLabel = n[activeDoor].label;
