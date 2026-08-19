@@ -583,6 +583,13 @@ const o = "#E7DECF",
       ],
     },
   ];
+const ARCHETYPE_COLORS = {
+  maker: { ink: "#5C3210" },
+  caregiver: { ink: "#66123A" },
+  seeker: { ink: "#0E4448" },
+  challenger: { ink: "#5C1418" },
+  bridger: { ink: "#3B2760" },
+};
 function b(t) {
   const l = [...t];
   for (let t = l.length - 1; t > 0; t--) {
@@ -610,6 +617,8 @@ function c({ size: t = 64 }) {
 }
 const el = React.createElement;
 
+const HAIRLINE = "1px solid #DDD3C2";
+
 function searchUrl(query) {
   return "https://www.youtube.com/results?search_query=" + encodeURIComponent(query);
 }
@@ -617,248 +626,198 @@ function googleSearchUrl(query) {
   return "https://www.google.com/search?q=" + encodeURIComponent(query);
 }
 
-function ExternalLink({ href, children }) {
+function SearchLink({ href, children }) {
   return el(
     "a",
     {
       href: href,
       target: "_blank",
       rel: "noopener noreferrer",
-      className: "font-mono text-[10px] uppercase tracking-widest font-bold",
-      style: { color: i, textDecoration: "underline", textUnderlineOffset: "2px" },
+      className: "text-[11px] uppercase tracking-[0.1em] font-semibold",
+      style: { color: K, opacity: 0.65 },
     },
     children,
-    " ↗",
+    "  →",
   );
 }
 
-function Chip({ children, tone, roomKey }) {
-  return el(
-    "span",
-    {
-      className: "font-mono text-[9px] uppercase tracking-widest font-bold inline-block px-2 py-1 mr-1.5 mb-1.5",
-      style: {
-        color: tone === "solid" ? o : i,
-        background: tone === "solid" ? i : "transparent",
-        border: `1.5px solid ${i}`,
-      },
-    },
-    children,
-  );
-}
-
-function LensTag({ lens }) {
-  if (!lens) return null;
+function Meta({ items }) {
+  const parts = (items || []).filter(Boolean);
+  if (!parts.length) return null;
   return el(
     "p",
-    { className: "font-mono text-[9px] uppercase tracking-widest font-bold mt-1", style: { color: i } },
-    "ACDEG → " + lens,
+    { className: "text-[11px] uppercase tracking-[0.12em] font-medium", style: { color: J } },
+    parts.join("   ·   "),
   );
 }
 
-function AcdegNote({ lens, text }) {
+function Annotation({ lens, text, ink }) {
+  if (!lens && !text) return null;
   return el(
     "div",
-    { className: "mt-2 pl-3", style: { borderLeft: `3px solid ${i}` } },
+    { className: "mt-4 pl-4", style: { borderLeft: `2px solid ${ink}` } },
+    lens ? el("p", { className: "text-[11px] uppercase tracking-[0.12em] font-semibold mb-1.5", style: { color: ink } }, lens) : null,
+    text ? el("p", { className: "text-[13px] leading-relaxed", style: { color: K, opacity: 0.7 } }, text) : null,
+  );
+}
+
+function Disclosure({ label, ink, children }) {
+  const [open, setOpen] = t(false);
+  return el(
+    "div",
+    { className: "mt-3" },
     el(
-      "p",
-      { className: "font-mono text-[9px] uppercase tracking-widest font-bold mb-1", style: { color: i } },
-      "ACDEG → " + lens,
+      "button",
+      {
+        onClick: () => setOpen((v) => !v),
+        className: "text-[11px] uppercase tracking-[0.12em] font-semibold inline-flex items-center gap-1.5 -mx-1",
+        style: { color: ink, background: "none", border: "none", padding: "8px 4px", cursor: "pointer" },
+        "aria-expanded": open,
+      },
+      label,
+      el("span", { style: { opacity: 0.6 } }, open ? "−" : "+"),
     ),
-    el("p", { className: "text-xs", style: { color: K, opacity: 0.8 } }, text),
+    open ? el("div", { className: "pop-in" }, children) : null,
   );
 }
 
-function PersonCard({ person }) {
+function PersonEntry({ person, index, ink }) {
+  const num = String(index + 1).padStart(2, "0");
   return el(
     "div",
-    { className: "mb-5 pb-5", style: { borderBottom: `1px solid ${J}` } },
+    { className: "py-6", style: { borderTop: index === 0 ? "none" : HAIRLINE } },
     el(
       "div",
-      { className: "flex items-baseline gap-2 mb-1 flex-wrap" },
-      el("span", { className: "text-lg" }, person.flag),
-      el("h3", { className: "font-display text-xl leading-none", style: { color: K } }, person.name.toUpperCase()),
-      person.discover ? el(Chip, { tone: "solid" }, "Contemporary Voice") : null,
-    ),
-    el(
-      "p",
-      { className: "font-mono text-[10px] uppercase tracking-widest font-bold mb-2", style: { color: J } },
-      person.country,
-    ),
-    el("p", { className: "text-sm italic mb-2", style: { color: i } }, person.hook),
-    el(
-      "ul",
-      { className: "text-xs mb-2 pl-4", style: { color: K, opacity: 0.85, listStyle: "disc" } },
-      person.facts.map((f, idx) => el("li", { key: idx, className: "mb-1" }, f)),
-    ),
-    el(
-      "p",
-      { className: "text-xs mb-1" },
+      { className: "flex items-start gap-4" },
+      el("span", { className: "font-mono text-[11px] pt-2", style: { color: J, opacity: 0.55 } }, num),
       el(
-        "span",
-        { className: "font-mono font-bold uppercase tracking-wide", style: { color: K } },
-        "Why this door: ",
+        "div",
+        { className: "flex-1 min-w-0" },
+        el("h3", { className: "font-serif text-3xl leading-tight mb-1.5", style: { color: K } }, person.name),
+        el(Meta, { items: [person.country, person.discover ? "Contemporary voice" : null] }),
+        el("p", { className: "font-serif italic text-lg leading-snug mt-3 mb-2", style: { color: ink } }, person.hook),
+        person.facts && person.facts.length
+          ? el("p", { className: "text-[13px] leading-relaxed", style: { color: K, opacity: 0.6 } }, person.facts.join("   ·   "))
+          : null,
+        el(
+          Disclosure,
+          { label: "Why this belongs here", ink: ink },
+          el("p", { className: "text-sm leading-relaxed mt-2", style: { color: K, opacity: 0.85 } }, person.why),
+          el(Annotation, { lens: person.acdeg.lens, text: person.acdeg.text, ink: ink }),
+        ),
       ),
-      el("span", { style: { color: K, opacity: 0.85 } }, person.why),
     ),
-    el(AcdegNote, { lens: person.acdeg.lens, text: person.acdeg.text }),
   );
 }
 
-function ListenItem({ item }) {
+function ListenEntry({ item, ink, isFirst }) {
   return el(
     "div",
-    { className: "mb-4 pb-4", style: { borderBottom: `1px solid ${J}` } },
-    el(Chip, null, item.tier),
-    el("p", { className: "text-sm font-semibold mt-1", style: { color: K } }, item.title),
-    el(
-      "p",
-      { className: "font-mono text-[10px] uppercase tracking-widest mb-1", style: { color: J } },
-      item.artist,
-    ),
-    item.note ? el("p", { className: "text-xs italic mb-1", style: { color: K, opacity: 0.75 } }, item.note) : null,
-    el(LensTag, { lens: item.tag }),
-    el(
-      "div",
-      { className: "mt-1.5" },
-      el(ExternalLink, { href: searchUrl(item.artist + " " + item.title) }, "Search"),
-    ),
+    { className: "py-5", style: { borderTop: isFirst ? "none" : HAIRLINE } },
+    el("p", { className: "text-[11px] uppercase tracking-[0.12em] font-semibold mb-1.5", style: { color: ink, opacity: 0.85 } }, item.tier),
+    el("p", { className: "font-serif text-xl leading-snug", style: { color: K } }, item.title),
+    el("p", { className: "text-sm mt-0.5", style: { color: J } }, item.artist),
+    item.note ? el("p", { className: "text-[13px] italic mt-1.5", style: { color: K, opacity: 0.6 } }, item.note) : null,
+    el(Meta, { items: [item.tag] }),
+    el("div", { className: "mt-2.5" }, el(SearchLink, { href: searchUrl(item.artist + " " + item.title) }, "Listen")),
   );
 }
 
-function WatchItem({ item }) {
+function WatchEntry({ item, ink, isFirst }) {
   return el(
     "div",
-    { className: "mb-4 pb-4", style: { borderBottom: `1px solid ${J}` } },
-    el("p", { className: "text-sm font-semibold", style: { color: K } }, item.title),
-    item.where
-      ? el(
-          "p",
-          { className: "font-mono text-[10px] uppercase tracking-widest mb-1", style: { color: J } },
-          item.where,
-        )
-      : null,
-    el(LensTag, { lens: item.tag }),
-    item.desc ? el("p", { className: "text-xs mt-1", style: { color: K, opacity: 0.85 } }, item.desc) : null,
-    el(
-      "div",
-      { className: "mt-1.5" },
-      el(ExternalLink, { href: searchUrl(item.title + " trailer") }, "Search"),
-    ),
+    { className: "py-5", style: { borderTop: isFirst ? "none" : HAIRLINE } },
+    el("p", { className: "font-serif text-xl leading-snug", style: { color: K } }, item.title),
+    el(Meta, { items: [item.where, item.tag] }),
+    item.desc ? el("p", { className: "text-sm leading-relaxed mt-2.5", style: { color: K, opacity: 0.75 } }, item.desc) : null,
+    el("div", { className: "mt-2.5" }, el(SearchLink, { href: searchUrl(item.title + " trailer") }, "Watch")),
   );
 }
 
-function ReadBlock({ book }) {
+function ReadSection({ book, ink }) {
   return el(
     "div",
     null,
-    el("p", { className: "text-sm font-semibold italic", style: { color: K } }, book.title),
-    el(
-      "p",
-      { className: "font-mono text-[10px] uppercase tracking-widest mb-2", style: { color: J } },
-      book.author + (book.where ? " — " + book.where : ""),
-    ),
-    book.desc ? el("p", { className: "text-xs mb-1", style: { color: K, opacity: 0.85 } }, book.desc) : null,
-    el(AcdegNote, { lens: book.tag, text: book.acdegText }),
-    el(
-      "div",
-      { className: "mt-2" },
-      el(ExternalLink, { href: googleSearchUrl(book.title + " " + book.author) }, "Look it up"),
-    ),
+    el("p", { className: "font-serif italic text-2xl leading-snug mb-1.5", style: { color: K } }, book.title),
+    el(Meta, { items: [book.author, book.where] }),
+    book.desc ? el("p", { className: "text-sm leading-relaxed mt-3 max-w-md", style: { color: K, opacity: 0.8 } }, book.desc) : null,
+    el(Annotation, { lens: book.tag, text: book.acdegText, ink: ink }),
+    el("div", { className: "mt-4" }, el(SearchLink, { href: googleSearchUrl(book.title + " " + book.author) }, "Look it up")),
   );
 }
 
-function PoetryBlock({ poem }) {
+function PoetrySection({ poem, ink }) {
   const isCopyright = poem.status === "copyright";
   const isFragment = !isCopyright && poem.fragment === true;
   const showExcerpt = isCopyright || isFragment;
   const statusLabel = isCopyright
     ? "Copyrighted — excerpt shown"
     : isFragment
-      ? "Public domain — excerpt shown here"
-      : "Public domain — full text as archived";
+      ? "Public domain — excerpt archived"
+      : "Public domain — full text";
   const linkLabel = isCopyright || isFragment ? "Read the full poem" : "Read more";
   return el(
     "div",
     null,
-    el("p", { className: "text-sm font-semibold", style: { color: K } }, "“" + poem.title + "”"),
-    el(
-      "p",
-      { className: "font-mono text-[10px] uppercase tracking-widest mb-2", style: { color: J } },
-      poem.poet + (poem.where ? " — " + poem.where : ""),
-    ),
-    el(AcdegNote, { lens: poem.tag, text: poem.acdegText }),
+    el("p", { className: "font-serif italic text-2xl leading-snug mb-1.5", style: { color: K } }, "“" + poem.title + "”"),
+    el(Meta, { items: [poem.poet, poem.where] }),
     el(
       "div",
-      { className: "mt-3 p-3", style: { background: o, borderLeft: `3px solid ${i}` } },
+      { className: "mt-5 pl-5", style: { borderLeft: `2px solid ${ink}` } },
       el(
         "p",
-        { className: "text-sm italic leading-relaxed", style: { color: K } },
+        { className: "font-serif italic text-xl leading-relaxed", style: { color: K } },
         showExcerpt ? poem.excerpt : poem.text,
       ),
     ),
+    el("p", { className: "text-[11px] uppercase tracking-[0.12em] mt-3", style: { color: J } }, statusLabel),
+    el(Annotation, { lens: poem.tag, text: poem.acdegText, ink: ink }),
+    el("div", { className: "mt-4" }, el(SearchLink, { href: googleSearchUrl(poem.title + " " + poem.poet + " full poem") }, linkLabel)),
+  );
+}
+
+function SeeSection({ art, ink }) {
+  return el(
+    "div",
+    null,
+    el("p", { className: "font-serif italic text-2xl leading-snug mb-1.5", style: { color: K } }, art.title),
+    el(Meta, { items: [art.artist, art.where] }),
+    art.medium ? el("p", { className: "text-[13px] mt-1.5", style: { color: J } }, art.medium) : null,
+    art.desc ? el("p", { className: "text-sm leading-relaxed mt-3 max-w-md", style: { color: K, opacity: 0.8 } }, art.desc) : null,
+    el(Annotation, { lens: art.tag, text: art.acdegText, ink: ink }),
+    art.source ? el("p", { className: "text-[11px] uppercase tracking-[0.12em] mt-3", style: { color: J } }, "Source — " + art.source) : null,
+    el("div", { className: "mt-4" }, el(SearchLink, { href: googleSearchUrl(art.artist + " " + art.title) }, "Look it up")),
+  );
+}
+
+function ActSection({ act, roomLabel }) {
+  return el(
+    "div",
+    null,
     el(
       "p",
-      { className: "font-mono text-[9px] uppercase tracking-widest font-bold mt-2", style: { color: J } },
-      statusLabel,
+      { className: "font-serif italic text-2xl leading-snug mb-4 max-w-sm", style: { color: K } },
+      "You've seen it, heard it, questioned it. Now do something with it.",
+    ),
+    el(
+      "p",
+      { className: "text-sm leading-relaxed mb-5 max-w-sm", style: { color: K, opacity: 0.75 } },
+      "Organisations already doing " + roomLabel + " work — in Ghana and across West Africa.",
     ),
     el(
       "div",
-      { className: "mt-1.5" },
-      el(
-        ExternalLink,
-        { href: googleSearchUrl(poem.title + " " + poem.poet + " full poem") },
-        linkLabel,
+      null,
+      act.orgs.map((name, idx) =>
+        el(
+          "p",
+          { key: idx, className: "text-base py-2.5", style: { color: K, borderTop: idx === 0 ? "none" : HAIRLINE } },
+          name,
+        ),
       ),
     ),
-  );
-}
-
-function SeeBlock({ art }) {
-  return el(
-    "div",
-    null,
-    el("p", { className: "text-sm font-semibold italic", style: { color: K } }, art.title),
     el(
       "p",
-      { className: "font-mono text-[10px] uppercase tracking-widest mb-2", style: { color: J } },
-      art.artist + (art.where ? " — " + art.where : ""),
-    ),
-    art.medium ? el("p", { className: "text-xs mb-1", style: { color: K, opacity: 0.7 } }, art.medium) : null,
-    art.desc ? el("p", { className: "text-xs mb-1", style: { color: K, opacity: 0.85 } }, art.desc) : null,
-    el(AcdegNote, { lens: art.tag, text: art.acdegText }),
-    art.source
-      ? el(
-          "p",
-          { className: "font-mono text-[9px] uppercase tracking-widest mt-2", style: { color: J } },
-          "Source: " + art.source,
-        )
-      : null,
-    el(
-      "div",
-      { className: "mt-2" },
-      el(ExternalLink, { href: googleSearchUrl(art.artist + " " + art.title) }, "Look it up"),
-    ),
-  );
-}
-
-function ActBlock({ act, roomLabel }) {
-  return el(
-    "div",
-    null,
-    el(
-      "p",
-      { className: "text-sm mb-3", style: { color: K, opacity: 0.85 } },
-      "Organisations already doing " + roomLabel + " work — in Ghana and across West Africa:",
-    ),
-    el(
-      "div",
-      { className: "flex flex-wrap" },
-      act.orgs.map((name, idx) => el(Chip, { key: idx }, name)),
-    ),
-    el(
-      "p",
-      { className: "text-xs mt-3", style: { color: J } },
+      { className: "text-[13px] italic mt-4", style: { color: J } },
       "Full contact details are in the room itself — ask a facilitator or check the exhibition guide.",
     ),
   );
@@ -871,13 +830,8 @@ const ROOM_CONTENT = {
       {
         name: "Efua Sutherland",
         country: "Ghana",
-        flag: "🇬🇭",
         hook: "Built institutions that gave Ghanaian theatre, writing, and children's culture somewhere to grow.",
-        facts: [
-          "Founded the Ghana Society of Writers, Ghana Experimental Theatre, and Ghana Drama Studio",
-          "Founded Afram Publications, becoming an important indigenous publisher",
-          "Pioneered modern Ghanaian theatre and children's literature/education after independence",
-        ],
+        facts: ["Founded Ghana Drama Studio", "Founded Afram Publications", "Pioneered Ghanaian theatre"],
         why: "She didn't just create culture — she built the structures through which other people could create culture.",
         acdeg: {
           lens: "Democratic Culture",
@@ -887,13 +841,8 @@ const ROOM_CONTENT = {
       {
         name: "Wangari Maathai",
         country: "Kenya",
-        flag: "🇰🇪",
         hook: "Organised ordinary people to become agents of change, one tree at a time.",
-        facts: [
-          "Founded the Green Belt Movement",
-          "Organised women to plant trees while connecting environmental restoration to livelihoods and community participation",
-          "First African woman to receive the Nobel Peace Prize",
-        ],
+        facts: ["Founded Green Belt Movement", "Nobel Peace Prize", "Organised rural women"],
         why: "Communities weren't told what to do — they were organised to do it themselves.",
         acdeg: {
           lens: "Marginalised Groups + Democratic Culture",
@@ -903,13 +852,8 @@ const ROOM_CONTENT = {
       {
         name: "Ballaké Sissoko",
         country: "Mali",
-        flag: "🇲🇱",
         hook: "Makes new cultural forms out of existing traditions — literally.",
-        facts: [
-          "Internationally renowned kora player rooted in Manding musical tradition",
-          "Collaboration with Piers Faccini (“Our Calling”) brings Malian tradition into dialogue with European folk songwriting",
-          "The album is framed by the artists themselves as a musical dialogue about migration and movement across borders",
-        ],
+        facts: ["Kora virtuoso", "Manding tradition, reimagined", "“Our Calling” with Piers Faccini"],
         why: "He builds new musical language out of old material — the purest form of “making.”",
         acdeg: {
           lens: "Democratic Culture",
@@ -966,38 +910,24 @@ const ROOM_CONTENT = {
       {
         name: "Onyeka Onwenu",
         country: "Nigeria",
-        flag: "🇳🇬",
         hook: "Used her public platform to speak to questions affecting ordinary people, again and again.",
-        facts: [
-          "Singer, songwriter, actress, journalist, and public servant",
-          "“One Love” became strongly associated with unity in Nigeria",
-          "Served as Executive Director/CEO of Nigeria's National Centre for Women Development",
-        ],
+        facts: ["“One Love” — unity anthem", "Singer, journalist, public servant", "Led National Centre for Women"],
         why: "She didn't just sing about society — she used her platform to actually speak to it.",
         acdeg: { lens: "Democratic Culture", text: "Used popular culture and public service to speak to social questions affecting Nigerians." },
       },
       {
         name: "Wangari Maathai",
         country: "Kenya",
-        flag: "🇰🇪",
         hook: "Treated environmental degradation as a human problem affecting real women and communities, not an abstract issue.",
-        facts: [
-          "Founder of the Green Belt Movement",
-          "Connected tree-planting directly to rural women's livelihoods",
-        ],
+        facts: ["Green Belt Movement founder", "Centred rural women's livelihoods", "Nobel Peace Prize"],
         why: "She noticed an everyday problem hurting ordinary people and treated it as exactly that.",
         acdeg: { lens: "Marginalised Groups", text: "Centres the participation and livelihoods of women whose needs were often treated as secondary to environmental policy." },
       },
       {
         name: "Leymah Gbowee",
         country: "Liberia",
-        flag: "🇱🇷",
         hook: "Organised women across religious and ethnic divisions during Liberia's civil war.",
-        facts: [
-          "Helped organise the Women of Liberia Mass Action for Peace",
-          "That movement became a major force pressuring political leaders toward negotiations",
-          "2011 Nobel Peace Prize, jointly awarded",
-        ],
+        facts: ["Women of Liberia Mass Action", "Helped end the civil war", "Nobel Peace Prize, 2011"],
         why: "The starting point was simple: people are suffering, somebody has to act.",
         acdeg: { lens: "Marginalised Groups + Democratic Culture", text: "One of the strongest ACDEG examples in the whole exhibition — ACDEG specifically recognises women's participation in decision-making and democratic culture." },
       },
@@ -1044,38 +974,24 @@ const ROOM_CONTENT = {
       {
         name: "Anas Aremeyaw Anas",
         country: "Ghana",
-        flag: "🇬🇭",
         hook: "Uncovers exactly what powerful people want kept hidden.",
-        facts: [
-          "Ghanaian investigative journalist",
-          "Known for undercover investigations into corruption, trafficking, and abuse",
-          "Uses hidden-camera investigation and source-gathering to expose wrongdoing",
-        ],
+        facts: ["Undercover investigative journalist", "Exposed corruption & trafficking", "Hidden-camera reporting"],
         why: "This is the archetype in its purest form — literally uncovering hidden truth.",
         acdeg: { lens: "Democratic Culture", text: "Investigative journalism supports access to information, public accountability, and informed citizen participation — ACDEG explicitly includes access to information, press freedom, and accountability among its objectives." },
       },
       {
         name: "Chinua Achebe",
         country: "Nigeria",
-        flag: "🇳🇬",
         hook: "Asked whose version of history we were actually being told.",
-        facts: [
-          "Things Fall Apart became one of the most internationally influential African novels",
-          "A Man of the People directly examines political corruption and postcolonial power",
-        ],
+        facts: ["Things Fall Apart", "A Man of the People", "Questioned inherited narratives"],
         why: "His work repeatedly interrogates whose story gets told, and why.",
         acdeg: { lens: "Democratic Culture", text: "Challenges readers to question inherited narratives and examine how power, history, and political leadership are represented." },
       },
       {
         name: "Lourdes Van-Dúnem",
         country: "Angola",
-        flag: "🇦🇴",
         hook: "The artist who recorded and preserved a society while it was changing around her.",
-        facts: [
-          "Rose to prominence in the 1960s with Ngola Ritmos, later performed with Jovens do Prenda",
-          "One of the recognized female voices in an Angolan music scene dominated by men",
-          "“Ngongo Ya Biluka” included in Pitchfork's Africa 100: The Indestructible Beat selection",
-        ],
+        facts: ["Angolan music pioneer", "“Ngongo Ya Biluka”", "Preserved culture through upheaval"],
         why: "Not literally an investigator — her Seeker fit is as a voice who preserved a true record of her society through a period of real change.",
         acdeg: { lens: "Democratic Culture", text: "Preserves cultural memory through music during major political and social change." },
       },
@@ -1128,39 +1044,24 @@ const ROOM_CONTENT = {
       {
         name: "Thomas Sankara",
         country: "Burkina Faso",
-        flag: "🇧🇫",
         hook: "Asked what happens when citizens stop accepting inherited systems of power.",
-        facts: [
-          "President of Burkina Faso, 1983 until his death in 1987",
-          "Led mass literacy, healthcare, self-reliance, and anti-corruption programmes",
-          "Explicitly connected social revolution with women's liberation — opposed forced marriage, FGM, and polygamy while expanding women's political participation",
-        ],
+        facts: ["President, Burkina Faso, 1983–87", "Literacy & healthcare reform", "Tied liberation to women's rights"],
         why: "He directly confronted existing structures of power and attempted radical institutional and social transformation.",
         acdeg: { lens: "Constitutional Change of Government + Marginalised Groups", text: "As President, led a transformation of Burkina Faso's government and society — including expanded literacy, healthcare, self-reliance, and women's political participation." },
       },
       {
         name: "Kwame Nkrumah",
         country: "Ghana",
-        flag: "🇬🇭",
         hook: "Led Ghana into independence and became a defining figure of Pan-Africanism.",
-        facts: [
-          "Ghana's first prime minister and first president",
-          "Central figure in Ghana's independence movement",
-          "Pushed major national development and industrialisation projects",
-        ],
+        facts: ["Ghana's first president", "Led independence movement", "Pan-Africanist icon"],
         why: "Represents the constitutional-change instinct at national scale — independence and the reshaping of government itself.",
         acdeg: { lens: "Constitutional Change of Government", text: "As Ghana's first president, led the transformation from colonial rule to independent government — reshaping how political authority was constituted and exercised in Ghana." },
       },
       {
         name: "Fela Kuti",
         country: "Nigeria",
-        flag: "🇳🇬",
         hook: "Turned live performance into direct political confrontation.",
-        facts: [
-          "Founder of Afrobeat",
-          "Used music to attack military government, corruption, and abuse of power",
-          "His music became an internationally recognized language of resistance",
-        ],
+        facts: ["Founder of Afrobeat", "“Zombie” vs. military rule", "Music as resistance"],
         why: "Probably the most culturally recognizable Challenger figure after Sankara.",
         acdeg: { lens: "Constitutional Change of Government + Democratic Culture", text: "Used music to challenge military government, political abuse, and impunity." },
       },
@@ -1210,37 +1111,24 @@ const ROOM_CONTENT = {
       {
         name: "Kofi Annan",
         country: "Ghana",
-        flag: "🇬🇭",
         hook: "Spent a career getting states and peoples with competing interests into the same room.",
-        facts: [
-          "Ghanaian diplomat who served as UN Secretary-General",
-          "Worked extensively on international cooperation and conflict resolution",
-          "Nobel Peace Prize, jointly with the UN, in 2001",
-        ],
+        facts: ["UN Secretary-General", "Nobel Peace Prize, 2001", "Career built on dialogue"],
         why: "The cleanest Bridger figure available — his entire public role was fundamentally about dialogue.",
         acdeg: { lens: "Democratic Culture", text: "Represents dialogue, multilateralism, negotiation, and institutional approaches to resolving conflict — a strong match for ACDEG's emphasis on political/social dialogue, public trust, and cooperation." },
       },
       {
         name: "Miriam Makeba",
         country: "South Africa",
-        flag: "🇿🇦",
         hook: "Her career didn't just speak across borders — it physically crossed them.",
-        facts: [
-          "Connected African cultural identity, the diaspora, anti-apartheid politics, and global audiences",
-          "Music travelled across Africa, the Americas, and the wider world",
-        ],
+        facts: ["Global anti-apartheid voice", "Crossed continents with music", "“Pata Pata”"],
         why: "She connected worlds rather than choosing one.",
         acdeg: { lens: "Democratic Culture + Marginalised Groups", text: "Connected African identity, the anti-apartheid struggle, and international audiences through music." },
       },
       {
         name: "wordsofAzia",
         country: "Côte d'Ivoire",
-        flag: "🇨🇮",
         hook: "Makes music that deliberately connects African places, generations, and cultural traditions.",
-        facts: [
-          "Work moves between Côte d'Ivoire, Europe, and other African countries",
-          "Explicitly describes her music as a way of connecting African youth and the diaspora",
-        ],
+        facts: ["Bridges CI & the diaspora", "Connects generations & places", "Contemporary voice to discover"],
         why: "Bridges tradition and contemporary global production — a contemporary voice worth discovering, not yet a household name.",
         acdeg: { lens: "Democratic Culture", text: "Creates cultural spaces where different African identities, generations, and places can encounter one another." },
         discover: true,
@@ -1286,6 +1174,58 @@ const ROOM_CONTENT = {
   },
 };
 
+const CATEGORY_INTROS = {
+  maker: {
+    people: "Three people who turned an idea into something that could hold weight.",
+    listen: "Music made by building something new out of what already existed.",
+    watch: "Stories about people who built the thing nobody had built yet.",
+    read: "A novel that asks what's left to build after independence.",
+    poetry: "A poem about carrying memory across distance and rivers.",
+    see: "An artwork made from what was discarded, and remade into meaning.",
+  },
+  caregiver: {
+    people: "Three people who noticed who was being left out, and acted.",
+    listen: "Songs written for the people history usually forgets to mention.",
+    watch: "A film about the human cost behind a political catastrophe.",
+    read: "A novel that humanises a war usually told through numbers.",
+    poetry: "A poem written for suffering that deserves to be witnessed.",
+    see: "An artwork built from the residue of exploitation and displacement.",
+  },
+  seeker: {
+    people: "Three people who wouldn't accept the first version of the story.",
+    listen: "Music for people who listen for what history leaves behind.",
+    watch: "A documentary built from two years spent finding out what was true.",
+    read: "A novel about whose account of history becomes the official one.",
+    poetry: "A poem for anyone still deciding what to believe.",
+    see: "An artwork made in the language of memory and identity.",
+  },
+  challenger: {
+    people: "Three people who asked why power got to stay unquestioned.",
+    listen: "Music that was never just music — it was confrontation.",
+    watch: "Films about what it costs to challenge a system from inside it.",
+    read: "A book for understanding why people rise against power, not just that they do.",
+    poetry: "A poem about the long distance between domination and freedom.",
+    see: "An artwork about a population forced to move by violence and inequality.",
+  },
+  bridger: {
+    people: "Three people who spent their lives getting people to talk to each other.",
+    listen: "Music that crossed borders because it refused to choose just one.",
+    watch: "A film about the everyday negotiation of difference.",
+    read: "A novel that moves between two countries and never quite settles in either.",
+    poetry: "A poem that finds a shared story across race and geography.",
+    see: "An artwork about who gets to count as part of the story.",
+  },
+};
+
+function CategoryIntro({ text }) {
+  if (!text) return null;
+  return el(
+    "p",
+    { className: "font-serif italic text-xl leading-snug mb-6 max-w-sm", style: { color: K } },
+    text,
+  );
+}
+
 const ROOM_TABS = [
   { key: "people", label: "People" },
   { key: "listen", label: "Listen" },
@@ -1303,37 +1243,31 @@ function ResultExplorer({ doors }) {
     if (!doors.includes(activeDoor)) setActiveDoor(doors[0]);
   }, [doors]);
   const content = ROOM_CONTENT[activeDoor];
+  const ink = ARCHETYPE_COLORS[activeDoor].ink;
   const roomLabel = n[activeDoor].label;
+  const intros = CATEGORY_INTROS[activeDoor];
   if (!content) return null;
   return el(
     "div",
-    { className: "mb-6" },
-    el("div", { className: "h-[2px] w-full mb-4", style: { background: J, opacity: 0.4 } }),
-    el(
-      "p",
-      { className: "font-mono text-[11px] uppercase tracking-widest font-bold mb-2", style: { color: i } },
-      "Inside " + roomLabel,
-    ),
-    el(
-      "p",
-      { className: "text-sm mb-3", style: { color: K, opacity: 0.85 } },
-      "People who might recognise how you react — and the music, film, reading, and art that live in this room.",
-    ),
+    { className: "mt-1" },
     doors.length > 1
       ? el(
           "div",
-          { className: "flex flex-wrap gap-2 mb-3" },
+          { className: "flex items-center gap-5 mb-5" },
           doors.map((dk) =>
             el(
               "button",
               {
                 key: dk,
                 onClick: () => setActiveDoor(dk),
-                className: "flat-btn font-mono text-[10px] uppercase tracking-widest font-bold px-3 py-1.5",
+                className: "text-sm uppercase tracking-wide font-semibold",
                 style: {
-                  background: activeDoor === dk ? i : s,
-                  color: activeDoor === dk ? o : K,
-                  border: `1.5px solid ${K}`,
+                  color: activeDoor === dk ? ARCHETYPE_COLORS[dk].ink : J,
+                  background: "none",
+                  border: "none",
+                  borderBottom: activeDoor === dk ? `2px solid ${ARCHETYPE_COLORS[dk].ink}` : "2px solid transparent",
+                  padding: "8px 0 6px 0",
+                  cursor: "pointer",
                 },
               },
               n[dk].label,
@@ -1342,24 +1276,25 @@ function ResultExplorer({ doors }) {
         )
       : null,
     el(
-      "p",
-      { className: "text-xs mb-4", style: { color: K, opacity: 0.7 } },
-      "Primary lens: " + content.lens.primary + "  ·  Secondary: " + content.lens.secondary,
-    ),
-    el(
       "div",
-      { className: "flex flex-wrap gap-1.5 mb-4" },
+      {
+        className: "sticky top-0 z-10 flex gap-6 overflow-x-auto mb-7 pt-1",
+        style: { background: o, borderBottom: HAIRLINE, whiteSpace: "nowrap" },
+      },
       ROOM_TABS.map((tb) =>
         el(
           "button",
           {
             key: tb.key,
             onClick: () => setTab(tb.key),
-            className: "flat-btn font-mono text-[10px] uppercase tracking-widest font-bold px-3 py-1.5",
+            className: "text-xs uppercase tracking-[0.14em] font-semibold flex-shrink-0",
             style: {
-              background: tab === tb.key ? i : "transparent",
-              color: tab === tb.key ? o : K,
-              border: `1.5px solid ${K}`,
+              color: tab === tb.key ? K : J,
+              background: "none",
+              border: "none",
+              borderBottom: tab === tb.key ? `2px solid ${ink}` : "2px solid transparent",
+              padding: "10px 0 12px 0",
+              cursor: "pointer",
             },
           },
           tb.label,
@@ -1368,14 +1303,35 @@ function ResultExplorer({ doors }) {
     ),
     el(
       "div",
-      { key: activeDoor + tab, className: "pop-in p-4", style: { background: s, border: `2px solid ${K}` } },
-      tab === "people" ? content.people.map((p2, idx) => el(PersonCard, { key: idx, person: p2 })) : null,
-      tab === "listen" ? content.listen.map((it, idx) => el(ListenItem, { key: idx, item: it })) : null,
-      tab === "watch" ? content.watch.map((it, idx) => el(WatchItem, { key: idx, item: it })) : null,
-      tab === "read" ? el(ReadBlock, { book: content.read }) : null,
-      tab === "poetry" ? el(PoetryBlock, { poem: content.poetry }) : null,
-      tab === "see" ? el(SeeBlock, { art: content.see }) : null,
-      tab === "act" ? el(ActBlock, { act: content.act, roomLabel: roomLabel }) : null,
+      { key: activeDoor + tab, className: "pop-in" },
+      tab === "people"
+        ? el(
+            "div",
+            null,
+            el(CategoryIntro, { text: intros.people }),
+            content.people.map((p2, idx) => el(PersonEntry, { key: idx, person: p2, index: idx, ink: ink })),
+          )
+        : null,
+      tab === "listen"
+        ? el(
+            "div",
+            null,
+            el(CategoryIntro, { text: intros.listen }),
+            content.listen.map((it, idx) => el(ListenEntry, { key: idx, item: it, ink: ink, isFirst: idx === 0 })),
+          )
+        : null,
+      tab === "watch"
+        ? el(
+            "div",
+            null,
+            el(CategoryIntro, { text: intros.watch }),
+            content.watch.map((it, idx) => el(WatchEntry, { key: idx, item: it, ink: ink, isFirst: idx === 0 })),
+          )
+        : null,
+      tab === "read" ? el("div", null, el(CategoryIntro, { text: intros.read }), el(ReadSection, { book: content.read, ink: ink })) : null,
+      tab === "poetry" ? el("div", null, el(CategoryIntro, { text: intros.poetry }), el(PoetrySection, { poem: content.poetry, ink: ink })) : null,
+      tab === "see" ? el("div", null, el(CategoryIntro, { text: intros.see }), el(SeeSection, { art: content.see, ink: ink })) : null,
+      tab === "act" ? el(ActSection, { act: content.act, roomLabel: roomLabel }) : null,
     ),
   );
 }
@@ -1448,7 +1404,7 @@ function r() {
       React.createElement(
         "style",
         null,
-        "\n        @import url('https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');\n        .font-display { font-family: 'Anton', sans-serif; font-weight: 400; }\n        .font-mono { font-family: 'Space Mono', monospace; }\n        .font-body { font-family: 'Inter', sans-serif; }\n        @keyframes popIn { 0% { transform: translateY(6px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }\n        .pop-in { animation: popIn 0.3s ease-out; }\n        .flat-btn { transition: opacity 0.12s ease, transform 0.08s ease; }\n        .flat-btn:active { transform: scale(0.98); opacity: 0.85; }\n      ",
+        "\n        @import url('https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&display=swap');\n        .font-display { font-family: 'Anton', sans-serif; font-weight: 400; }\n        .font-mono { font-family: 'Space Mono', monospace; }\n        .font-body { font-family: 'Inter', sans-serif; }\n        .font-serif { font-family: 'Fraunces', ui-serif, Georgia, serif; font-optical-sizing: auto; }\n        @keyframes popIn { 0% { transform: translateY(6px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }\n        .pop-in { animation: popIn 0.35s ease-out; }\n        .flat-btn { transition: opacity 0.12s ease, transform 0.08s ease; }\n        .flat-btn:active { transform: scale(0.98); opacity: 0.85; }\n        ::-webkit-scrollbar { display: none; }\n        @media (prefers-reduced-motion: reduce) { .pop-in { animation: none; } }\n      ",
       ),
       u &&
         React.createElement(
@@ -1735,130 +1691,83 @@ function r() {
                   "p",
                   {
                     className:
-                      "font-mono text-[11px] uppercase tracking-widest font-bold mb-2",
-                    style: { color: i },
+                      "text-[11px] uppercase tracking-[0.15em] font-semibold mb-5",
+                    style: { color: J },
                   },
-                  "Your Starting Point",
+                  "Your Result",
                   d.length > 1 ? "s" : "",
+                ),
+                1 === d.length &&
+                  n[L].doorImage &&
+                  React.createElement(
+                    "div",
+                    { className: "mb-6", style: { width: "34%", maxWidth: 150 } },
+                    React.createElement("img", {
+                      src: n[L].doorImage,
+                      alt: `${n[L].label} door`,
+                      style: { width: "100%", height: "auto", display: "block" },
+                    }),
+                  ),
+                React.createElement(
+                  "h1",
+                  {
+                    className:
+                      d.length > 1
+                        ? "font-serif text-4xl leading-[0.98] mb-4"
+                        : "font-serif text-6xl leading-[0.92] mb-5",
+                  },
+                  d.map((t, idx) =>
+                    React.createElement(
+                      "span",
+                      { key: t },
+                      React.createElement(
+                        "span",
+                        { style: { color: ARCHETYPE_COLORS[t].ink } },
+                        n[t].label,
+                      ),
+                      idx < d.length - 1
+                        ? React.createElement(
+                            "span",
+                            { style: { color: J, opacity: 0.5 } },
+                            "  /  ",
+                          )
+                        : null,
+                    ),
+                  ),
                 ),
                 React.createElement(
                   "p",
                   {
-                    className: "text-sm mb-2",
-                    style: { color: K, opacity: 0.75 },
+                    className: "font-serif italic text-xl leading-snug mb-5 max-w-sm pl-4",
+                    style: { color: K, borderLeft: `2px solid ${ARCHETYPE_COLORS[L].ink}` },
                   },
-                  "Across the five situations, your choices leaned most strongly toward",
+                  1 === d.length
+                    ? `“${n[L].question}”`
+                    : "Your choices leaned equally toward these doors — that's not a glitch, that's democracy. Whichever pulls at you, start there.",
                 ),
-                d.length > 1 &&
+                1 === d.length &&
                   React.createElement(
                     "p",
                     {
-                      className: "text-sm mb-5 p-3",
-                      style: {
-                        color: K,
-                        background: s,
-                        border: `2px solid ${i}`,
-                      },
+                      className: "text-[15px] leading-relaxed mb-6 max-w-sm",
+                      style: { color: K, opacity: 0.75 },
                     },
-                    React.createElement(
-                      "strong",
-                      null,
-                      "You got ",
-                      d.length,
-                      " doors",
-                    ),
-                    " — that's not a glitch, that's democracy. Scroll down to see all of them. Nobody else gets to pick which one resonates more. Whichever pulls at you, start there.",
+                    n[L].blurb,
                   ),
-                d.map((t) =>
-                  React.createElement(
-                    "div",
-                    { key: t, className: "mb-5 flex gap-3 items-start" },
-                    n[t].doorImage
-                      ? React.createElement(
-                          "div",
-                          {
-                            className: "flex-shrink-0",
-                            style: {
-                              width: d.length > 1 ? 40 : 56,
-                              height: d.length > 1 ? 128 : 180,
-                              border: `2px solid ${K}`,
-                              background: s,
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            },
-                          },
-                          React.createElement("img", {
-                            src: n[t].doorImage,
-                            alt: `${n[t].label} door`,
-                            style: {
-                              width: "100%",
-                              height: "100%",
-                              objectFit: "contain",
-                            },
-                          }),
-                        )
-                      : React.createElement(
-                          "div",
-                          { className: "flex-shrink-0" },
-                          React.createElement(c, {
-                            size: d.length > 1 ? 40 : 72,
-                          }),
-                        ),
-                    React.createElement(
-                      "div",
-                      null,
-                      React.createElement(
-                        "h1",
-                        {
-                          className:
-                            d.length > 1
-                              ? "font-display text-3xl mb-1 leading-none"
-                              : "font-display text-5xl mb-1 leading-none",
-                          style: { color: K },
-                        },
-                        n[t].label.toUpperCase(),
-                      ),
-                      React.createElement(
-                        "p",
-                        {
-                          className: "text-sm italic mb-1",
-                          style: { color: i },
-                        },
-                        '"',
-                        n[t].question,
-                        '"',
-                      ),
-                      1 === d.length &&
-                        React.createElement(
-                          "p",
-                          {
-                            className: "text-sm",
-                            style: { color: K, opacity: 0.85 },
-                          },
-                          n[t].blurb,
-                        ),
-                    ),
-                  ),
-                ),
                 React.createElement(
-                  "div",
+                  "p",
                   {
-                    className: "p-4 mb-4",
-                    style: { background: s, border: `2px solid ${K}` },
+                    className: "font-serif italic text-base leading-snug mb-8 max-w-sm",
+                    style: { color: J },
                   },
-                  React.createElement(
-                    "p",
-                    { className: "text-sm font-semibold", style: { color: K } },
-                    "This doesn't define you. It simply gives you a place to begin.",
-                  ),
+                  "This doesn't define you. It simply gives you a place to begin.",
                 ),
                 React.createElement(ResultExplorer, { doors: d }),
                 React.createElement(
                   "p",
                   {
-                    className: "text-sm mb-6",
-                    style: { color: K, opacity: 0.85 },
+                    className: "text-[13px] leading-relaxed mt-10 max-w-sm",
+                    style: { color: K, opacity: 0.55 },
                   },
                   "You have 15 minutes here. Then go see how the other four approach the same world.",
                 ),
@@ -1866,24 +1775,24 @@ function r() {
                   "button",
                   {
                     onClick: B,
-                    className:
-                      "flat-btn w-full flex items-center justify-center gap-2 py-4 font-mono text-xs uppercase tracking-widest font-bold",
+                    className: "text-xs uppercase tracking-[0.14em] font-semibold mt-6",
                     style: {
-                      background: s,
                       color: K,
-                      border: `2px solid ${K}`,
+                      background: "none",
+                      border: "none",
+                      borderBottom: `1px solid ${K}`,
+                      padding: "8px 0",
+                      cursor: "pointer",
                     },
                   },
-                  React.createElement(a, { size: 14 }),
-                  " Play again",
+                  "Play again",
                 ),
                 React.createElement(
                   "button",
                   {
                     onClick: w,
-                    className:
-                      "w-full text-center text-xs font-mono font-bold mt-3",
-                    style: { color: J },
+                    className: "block text-xs uppercase tracking-[0.14em] font-semibold mt-2",
+                    style: { color: J, background: "none", border: "none", padding: "8px 0", cursor: "pointer" },
                   },
                   "Change my answers",
                 ),
