@@ -1289,6 +1289,22 @@ function RoomDoorEntry({ roomKey, isActive, isFirst }) {
   );
 }
 
+function DoorDefinition({ roomKey, isFirst }) {
+  const room = n[roomKey];
+  const ink = ARCHETYPE_COLORS[roomKey].ink;
+  return el(
+    "div",
+    { className: "py-5 max-w-sm", style: { borderTop: isFirst ? "none" : HAIRLINE } },
+    el("h3", { className: "font-serif text-2xl leading-none mb-2", style: { color: ink } }, room.label),
+    el(
+      "p",
+      { className: "font-serif italic text-lg leading-snug mb-2 pl-4", style: { color: K, borderLeft: `2px solid ${ink}` } },
+      `“${room.question}”`,
+    ),
+    el("p", { className: "text-[15px] leading-relaxed", style: { color: K, opacity: 0.75 } }, room.blurb),
+  );
+}
+
 function RoomsGallery({ activeKeys, onBack }) {
   return el(
     "div",
@@ -1818,25 +1834,41 @@ function r() {
                     ),
                   ),
                 ),
-                React.createElement(
-                  "p",
-                  {
-                    className: "font-serif italic text-xl leading-snug mb-5 max-w-sm pl-4",
-                    style: { color: K, borderLeft: `2px solid ${ARCHETYPE_COLORS[L].ink}` },
-                  },
-                  1 === d.length
-                    ? `“${n[L].question}”`
-                    : "Your choices leaned equally toward these doors — that's not a glitch, that's democracy. Whichever pulls at you, start there.",
-                ),
-                1 === d.length &&
-                  React.createElement(
-                    "p",
-                    {
-                      className: "text-[15px] leading-relaxed mb-6 max-w-sm",
-                      style: { color: K, opacity: 0.75 },
-                    },
-                    n[L].blurb,
-                  ),
+                1 === d.length
+                  ? React.createElement(
+                      "p",
+                      {
+                        className: "font-serif italic text-xl leading-snug mb-5 max-w-sm pl-4",
+                        style: { color: K, borderLeft: `2px solid ${ARCHETYPE_COLORS[L].ink}` },
+                      },
+                      `“${n[L].question}”`,
+                    )
+                  : null,
+                1 === d.length
+                  ? React.createElement(
+                      "p",
+                      {
+                        className: "text-[15px] leading-relaxed mb-6 max-w-sm",
+                        style: { color: K, opacity: 0.75 },
+                      },
+                      n[L].blurb,
+                    )
+                  : null,
+                d.length > 1
+                  ? React.createElement(
+                      "div",
+                      { className: "mb-6" },
+                      React.createElement(
+                        "p",
+                        {
+                          className: "text-sm leading-relaxed mb-2 max-w-sm",
+                          style: { color: K, opacity: 0.75 },
+                        },
+                        "Your choices leaned equally toward these doors — that's not a glitch, that's democracy. Here's what each one actually means.",
+                      ),
+                      d.map((t, idx) => React.createElement(DoorDefinition, { key: t, roomKey: t, isFirst: idx === 0 })),
+                    )
+                  : null,
                 React.createElement(
                   "p",
                   {
