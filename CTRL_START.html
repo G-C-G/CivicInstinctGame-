@@ -817,6 +817,18 @@ function SeeSection({ art, ink }) {
   );
 }
 
+function OrgEntry({ org, ink, isFirst }) {
+  return el(
+    "div",
+    { className: "py-4", style: { borderTop: isFirst ? "none" : HAIRLINE } },
+    el("p", { className: "text-base font-semibold", style: { color: K } }, org.name),
+    org.desc ? el("p", { className: "text-sm leading-relaxed mt-1", style: { color: K, opacity: 0.75 } }, org.desc) : null,
+    org.url
+      ? el("div", { className: "mt-1.5" }, el(SearchLink, { href: org.url }, "Learn more / volunteer"))
+      : el("p", { className: "text-[13px] italic mt-1", style: { color: J } }, "No verified website yet — ask a facilitator for contact details."),
+  );
+}
+
 function ActSection({ act, roomLabel }) {
   return el(
     "div",
@@ -834,13 +846,7 @@ function ActSection({ act, roomLabel }) {
     el(
       "div",
       null,
-      act.orgs.map((name, idx) =>
-        el(
-          "p",
-          { key: idx, className: "text-base py-2.5", style: { color: K, borderTop: idx === 0 ? "none" : HAIRLINE } },
-          name,
-        ),
-      ),
+      act.orgs.map((org, idx) => el(OrgEntry, { key: idx, org: org, isFirst: idx === 0 })),
     ),
     el(
       "p",
@@ -930,7 +936,16 @@ const ROOM_CONTENT = {
       acdegText: "Transforms inherited West African cultural forms and discarded industrial materials into new public meaning — a literal example of how culture is made, remade, and carried forward.",
       source: "The Metropolitan Museum of Art",
     },
-    act: { orgs: ["Tide Turners", "GYEM", "SYND", "SWK Ghana", "AKO Foundation", "Upper Foods", "and more — Ghana → West Africa → Africa"] },
+    act: {
+      orgs: [
+        { name: "Tide Turners", desc: "A UN Environment Programme youth movement, active in Ghana through local partners, training young people to fight plastic pollution.", url: "https://www.unep.org/topics/youth-education-and-environment/tide-turners/" },
+        { name: "GYEM", desc: "Ghana Youth Environmental Movement — mobilises young people across Ghana for environmental advocacy and climate action.", url: "https://gyemgh.org/" },
+        { name: "SYND", desc: "Strategic Youth Network for Development — advocates for youth inclusion in forestry, climate, and energy governance.", url: "https://syndghana.org/" },
+        { name: "SWK Ghana", desc: null, url: null },
+        { name: "AKO Foundation", desc: "A youth-led Accra organisation working on plastic pollution, climate-smart agriculture, and gender and climate policy.", url: "https://akofoundation.com/" },
+        { name: "Upper Foods", desc: "A Ghanaian social enterprise processing locally grown tomatoes in the Upper East Region, creating jobs in a farming community.", url: "https://upperfoodsgh.com/" },
+      ],
+    },
   },
   caregiver: {
     lens: { primary: "Marginalised Groups", secondary: "Democratic Culture" },
@@ -994,7 +1009,16 @@ const ROOM_CONTENT = {
       acdegText: "Turns the material history of exploitation, displacement, and unequal power into a monumental cultural object — making histories of people affected by colonial systems visible rather than invisible.",
       source: "Akron Art Museum",
     },
-    act: { orgs: ["GFD", "WODAO", "ADI", "ABAK Foundation", "Ark Foundation Ghana", "NEWDA", "and more"] },
+    act: {
+      orgs: [
+        { name: "GFD", desc: "Ghana Federation of Disability Organisations — the national umbrella body advocating for the rights of persons with disabilities.", url: "https://gfd.org.gh/" },
+        { name: "WODAO", desc: "Women With Disability Development and Advocacy Organization — champions the rights and economic empowerment of women and girls with disabilities.", url: "https://wodao.africa/" },
+        { name: "ADI", desc: "Africa Disability Institute (formerly VOICE Ghana) — researches and advocates for disability rights and inclusion across Africa.", url: "https://adinstitute.org/" },
+        { name: "ABAK Foundation", desc: "A Ghanaian NGO promoting disability inclusion, gender mainstreaming, and civic accountability.", url: null },
+        { name: "Ark Foundation Ghana", desc: "Ghana's first shelter and support organisation for women and children surviving domestic violence, abuse, and trafficking.", url: "https://arkfoundationghana.org/" },
+        { name: "NEWDA", desc: "Network of Women with Disabilities, Africa — gives women with disabilities a unified voice to push for rights and policy protections.", url: null },
+      ],
+    },
   },
   seeker: {
     lens: { primary: "Democratic Culture", secondary: "Constitutional Change of Government" },
@@ -1064,7 +1088,17 @@ const ROOM_CONTENT = {
       acdegText: "That's the same instinct as a Seeker — not accepting a familiar form at face value, but breaking it down until something truer emerges.",
       source: null,
     },
-    act: { orgs: ["CDD-Ghana", "Penplusbytes", "FactSpace West Africa", "GhanaFact", "MFWA", "WACSI", "CSEA", "and more"] },
+    act: {
+      orgs: [
+        { name: "CDD-Ghana", desc: "Ghana Center for Democratic Development — an independent think tank using research and civic dialogue to strengthen democracy.", url: "https://cddgh.org/" },
+        { name: "Penplusbytes", desc: "A Ghanaian civic-tech nonprofit using digital technology and media training to promote accountability and fight disinformation.", url: "https://penplusbytes.org/" },
+        { name: "FactSpace West Africa", desc: "Fact-checks claims and maps disinformation across Ghana, Nigeria, and neighbouring countries.", url: "https://factspace.org/" },
+        { name: "GhanaFact", desc: "Ghana's independent fact-checking platform, verifying political claims and scams circulating online.", url: "https://ghanafact.com/" },
+        { name: "MFWA", desc: "Media Foundation for West Africa — defends press freedom and media independence across all 16 West African countries.", url: "https://mfwa.org/" },
+        { name: "WACSI", desc: "West Africa Civil Society Institute — builds the capacity of civil society organisations across the region to engage in policy and governance.", url: "https://wacsi.org/" },
+        { name: "CSEA", desc: null, url: null },
+      ],
+    },
   },
   challenger: {
     lens: { primary: "Constitutional Change of Government", secondary: "Marginalised Groups" },
@@ -1131,7 +1165,15 @@ const ROOM_CONTENT = {
       acdegText: "Shows a population moving in response to racial violence and structural inequality.",
       source: "MoMA / The Phillips Collection",
     },
-    act: { orgs: ["Democracy Hub", "#FixTheCountry", "Ghana Integrity Initiative", "CODEO", "NCCE", "and more"] },
+    act: {
+      orgs: [
+        { name: "Democracy Hub", desc: "A Ghanaian civil-society group organising protests and legal action to demand government transparency and accountability.", url: null },
+        { name: "#FixTheCountry", desc: "A non-partisan Ghanaian youth movement that organised mass protests against economic hardship, demanding government accountability.", url: "https://fixthecountrygh.com/" },
+        { name: "Ghana Integrity Initiative (now Transparency International Ghana)", desc: "Ghana's chapter of Transparency International, working to combat corruption and promote accountability.", url: "https://www.tighana.org/" },
+        { name: "CODEO", desc: "Coalition of Domestic Election Observers — Ghana's largest domestic election-observer network, monitoring elections for fairness.", url: "https://codeoghana.org/" },
+        { name: "NCCE", desc: "National Commission for Civic Education — the constitutional body educating citizens on their rights and responsibilities in a democracy.", url: "https://www.nccegh.org/" },
+      ],
+    },
   },
   bridger: {
     lens: { primary: "Democratic Culture", secondary: "Marginalised Groups" },
@@ -1198,7 +1240,15 @@ const ROOM_CONTENT = {
       acdegText: "Makes the argument that a democratic culture has to recognise the different people and histories that constitute a society — including people whose belonging has been contested. The work literally asks: who gets counted as part of the national story?",
       source: "Tate",
     },
-    act: { orgs: ["WANEP-Ghana", "KAIPTC", "FOSDA / Women Mediators Network Ghana", "CDD-Ghana", "NCCE", "and more"] },
+    act: {
+      orgs: [
+        { name: "WANEP-Ghana", desc: "West Africa Network for Peacebuilding, Ghana — works to prevent, resolve, and transform violent conflict.", url: "https://wanepghana.org/" },
+        { name: "KAIPTC", desc: "Kofi Annan International Peacekeeping Training Centre — trains peacekeepers and mediators from across West Africa.", url: "https://www.kaiptc.org/" },
+        { name: "FOSDA / Women Mediators Network Ghana", desc: "Foundation for Security and Development in Africa — builds women's leadership in peacebuilding and mediation.", url: "https://fosda.org/" },
+        { name: "CDD-Ghana", desc: "Ghana Center for Democratic Development — an independent think tank using research and civic dialogue to strengthen democracy.", url: "https://cddgh.org/" },
+        { name: "NCCE", desc: "National Commission for Civic Education — the constitutional body educating citizens on their rights and responsibilities in a democracy.", url: "https://www.nccegh.org/" },
+      ],
+    },
   },
 };
 
@@ -1515,7 +1565,7 @@ function ResultExplorer({ doors }) {
       tab === "read" ? el("div", null, el(CategoryIntro, { text: intros.read }), el(ReadSection, { book: content.read, ink: ink })) : null,
       tab === "poetry" ? el("div", null, el(CategoryIntro, { text: intros.poetry }), el(PoetrySection, { poem: content.poetry, ink: ink })) : null,
       tab === "see" ? el("div", null, el(CategoryIntro, { text: intros.see }), el(SeeSection, { art: content.see, ink: ink })) : null,
-      tab === "act" ? el(ActSection, { act: content.act, roomLabel: roomLabel }) : null,
+      tab === "act" ? el(ActSection, { act: content.act, roomLabel: roomLabel, ink: ink }) : null,
     ),
   );
 }
