@@ -744,8 +744,8 @@ function ListenEntry({ item, ink, isFirst }) {
     el("p", { className: "font-serif text-xl leading-snug", style: { color: K } }, item.title),
     el("p", { className: "text-sm mt-0.5", style: { color: J } }, item.artist),
     item.note ? el("p", { className: "text-[13px] italic mt-1.5", style: { color: K, opacity: 0.6 } }, item.note) : null,
-    el(Meta, { items: [item.tag] }),
-    el("div", { className: "mt-2.5" }, el(SearchLink, { href: searchUrl(item.artist + " " + item.title) }, "Listen")),
+    el("div", { className: "mt-2" }, el(LensPill, { lens: item.tag, ink: ink })),
+    el("div", { className: "mt-1.5" }, el(SearchLink, { href: searchUrl(item.artist + " " + item.title) }, "Listen")),
   );
 }
 
@@ -754,9 +754,10 @@ function WatchEntry({ item, ink, isFirst }) {
     "div",
     { className: "py-5", style: { borderTop: isFirst ? "none" : HAIRLINE } },
     el("p", { className: "font-serif text-xl leading-snug", style: { color: K } }, item.title),
-    el(Meta, { items: [item.where, item.tag] }),
+    el(Meta, { items: [item.where] }),
     item.desc ? el("p", { className: "text-sm leading-relaxed mt-2.5", style: { color: K, opacity: 0.75 } }, item.desc) : null,
-    el("div", { className: "mt-2.5" }, el(SearchLink, { href: searchUrl(item.title + " trailer") }, "Watch")),
+    el("div", { className: "mt-2" }, el(LensPill, { lens: item.tag, ink: ink })),
+    el("div", { className: "mt-1.5" }, el(SearchLink, { href: searchUrl(item.title + " trailer") }, "Watch")),
   );
 }
 
@@ -888,19 +889,19 @@ const ROOM_CONTENT = {
       },
     ],
     listen: [
-      { tier: "Start Here", title: "Water No Get Enemy", artist: "Fela Kuti", tag: "Democratic Culture / Accountability", note: "A proverb turned into a song — water has no enemy because everyone needs it, whoever they are." },
-      { tier: "Start Here", title: "Grazing in the Grass", artist: "Hugh Masekela", tag: "Democratic Culture", note: "Masekela's global crossover hit — South African horn and township rhythm reaching a worldwide audience without losing where it came from." },
+      { tier: "Start Here", title: "Water No Get Enemy", artist: "Fela Kuti", tag: "Democratic Culture / Accountability", note: "A proverb turned into a song — water has no enemy because everyone needs it, whoever they are. A quiet case for accountability: what belongs to everyone has to work for everyone." },
+      { tier: "Start Here", title: "Grazing in the Grass", artist: "Hugh Masekela", tag: "Democratic Culture", note: "Masekela's global crossover hit — South African horn and township rhythm reaching a worldwide audience without losing where it came from. Proof a culture can travel on its own terms." },
       {
         tier: "Discovery",
         title: "Our Calling — One Half of a Dream / I Wanted to Belong / North and South / Borne on the Wind",
         artist: "Ballaké Sissoko & Piers Faccini",
         tag: "Democratic Culture",
-        note: "Kora and guitar in direct conversation — a 2025 album the artists frame explicitly as being about migration and crossing borders.",
+        note: "Kora and guitar in direct conversation — a 2025 album the artists frame explicitly as being about migration and crossing borders. Two traditions talking as equals, neither one translated away.",
       },
     ],
     watch: [
-      { title: "The Boy Who Harnessed the Wind", where: "Malawi", tag: "Marginalised Groups", desc: "A teenager builds a wind turbine to save his family's farm from famine." },
-      { title: "Black Panther", where: null, tag: null, desc: "A fictional African nation that was never colonised — built entirely on its own terms, technology and tradition fused together." },
+      { title: "The Boy Who Harnessed the Wind", where: "Malawi", tag: "Marginalised Groups", desc: "A teenager builds a wind turbine to save his family's farm from famine — the people most affected by a crisis are also the ones who solve it, if anyone gives them the room to." },
+      { title: "Black Panther", where: null, tag: "Democratic Culture", desc: "A fictional African nation that was never colonised — built entirely on its own terms, technology and tradition fused together. A thought experiment in what culture gets to look like when nobody else designed it." },
     ],
     read: {
       title: "The Beautyful Ones Are Not Yet Born",
@@ -960,12 +961,12 @@ const ROOM_CONTENT = {
       },
     ],
     listen: [
-      { tier: "Start Here", title: "One Love", artist: "Onyeka Onwenu", tag: "Democratic Culture", note: "Became an anthem of unity in Nigeria — still one of Onwenu's most recognised recordings." },
-      { tier: "Start Here", title: "Beasts of No Nation", artist: "Fela Kuti", tag: "Marginalised Groups / Accountability", note: "Fela's direct attack on military rule — naming cruelty and impunity as the actual policy, not an aberration from it." },
-      { tier: "Start Here", title: "One Love", artist: "Bob Marley", tag: "Democratic Culture", note: "A different song than Onwenu's, despite the same title." },
-      { tier: "Supporting", title: "Bia Nulu / Weep Not Children / Living Music / My World / Dancing in the Sun / Endless Life", artist: "Onyeka Onwenu", tag: null, note: "Deeper cuts from across Onwenu's catalogue, for anyone who wants more than the anthem." },
+      { tier: "Start Here", title: "One Love", artist: "Onyeka Onwenu", tag: "Democratic Culture", note: "Became an anthem of unity in Nigeria — still one of Onwenu's most recognised recordings. Unity built through culture, not declared by decree." },
+      { tier: "Start Here", title: "Beasts of No Nation", artist: "Fela Kuti", tag: "Marginalised Groups / Accountability", note: "Fela's direct attack on military rule — naming cruelty and impunity as the actual policy, not an aberration from it. The people who bear that policy's cost are exactly who this lens asks you to notice." },
+      { tier: "Start Here", title: "One Love", artist: "Bob Marley", tag: "Democratic Culture", note: "A different song than Onwenu's, despite the same title — both landing on the same idea, that culture is a shared claim, not a private one." },
+      { tier: "Supporting", title: "Bia Nulu / Weep Not Children / Living Music / My World / Dancing in the Sun / Endless Life", artist: "Onyeka Onwenu", tag: "Democratic Culture", note: "Deeper cuts from across Onwenu's catalogue, for anyone who wants more than the anthem — the same public voice, applied to smaller, quieter questions." },
     ],
-    watch: [{ title: "Hotel Rwanda", where: null, tag: "Marginalised Groups", desc: "A hotel manager shelters over a thousand people during the Rwandan genocide, using status and access as instruments of protection when institutions had already failed." }],
+    watch: [{ title: "Hotel Rwanda", where: null, tag: "Marginalised Groups", desc: "A hotel manager shelters over a thousand people during the Rwandan genocide, using status and access as instruments of protection when institutions had already failed. Marginalised Groups, made literal: whose survival depended on someone choosing to see them." }],
     read: {
       title: "Half of a Yellow Sun",
       author: "Chimamanda Ngozi Adichie",
@@ -1024,9 +1025,9 @@ const ROOM_CONTENT = {
       },
     ],
     listen: [
-      { tier: "Start Here", title: "Sorrow, Tears & Blood", artist: "Fela Kuti", tag: "Democratic Culture / Accountability", note: "Written in the aftermath of a real raid on Fela's own commune — grief turned into evidence." },
-      { tier: "Start Here", title: "Ngongo Ya Biluka", artist: "Lourdes Van-Dúnem", tag: "Democratic Culture", note: "One of the tracks Pitchfork singled out in its Africa 100 list — recorded by a woman holding her ground in an Angolan scene that mostly wasn't looking for one." },
-      { tier: "Discovery", title: "Mali Spirit / Afro G Western / Faya / Sinatanale", artist: "LAGOS IN PARIS", tag: "Democratic Culture", note: "Traditional West African rhythm meets contemporary electronic production — 'Mali Spirit' draws on the Bolo Super dance tradition of Côte d'Ivoire and Liberia." },
+      { tier: "Start Here", title: "Sorrow, Tears & Blood", artist: "Fela Kuti", tag: "Democratic Culture / Accountability", note: "Written in the aftermath of a real raid on Fela's own commune — grief turned into evidence. Turning what happened into a public record is itself an act of accountability." },
+      { tier: "Start Here", title: "Ngongo Ya Biluka", artist: "Lourdes Van-Dúnem", tag: "Democratic Culture", note: "One of the tracks Pitchfork singled out in its Africa 100 list — recorded by a woman holding her ground in an Angolan scene that mostly wasn't looking for one. Preserving what actually happened, in a form nobody can quietly rewrite." },
+      { tier: "Discovery", title: "Mali Spirit / Afro G Western / Faya / Sinatanale", artist: "LAGOS IN PARIS", tag: "Democratic Culture", note: "Traditional West African rhythm meets contemporary electronic production — 'Mali Spirit' draws on the Bolo Super dance tradition of Côte d'Ivoire and Liberia. Tracing a tradition back to its actual source is its own kind of fact-checking." },
     ],
     watch: [
       {
@@ -1094,14 +1095,14 @@ const ROOM_CONTENT = {
       },
     ],
     listen: [
-      { tier: "Start Here", title: "Zombie", artist: "Fela Kuti", tag: "Constitutional Change of Government", note: "Essential — directly attacked the Nigerian military establishment." },
-      { tier: "Start Here", title: "Get Up, Stand Up", artist: "Bob Marley", tag: "Democratic Culture / Citizen Participation", note: "One of Marley's most direct calls to action — insisting rights are claimed, not granted." },
-      { tier: "Start Here", title: "Soweto Blues", artist: "Miriam Makeba", tag: "Marginalised Groups", note: "Written about the 1976 Soweto uprising, when police killed schoolchildren protesting — Makeba turned grief into testimony." },
-      { tier: "Discovery", title: "Hoggar (album)", artist: "Tinariwen", tag: null, note: "Grammy-winning Tuareg musical pioneers — a recent release, not yet a classic. Explore the album, not just one song." },
+      { tier: "Start Here", title: "Zombie", artist: "Fela Kuti", tag: "Constitutional Change of Government", note: "Essential — directly attacked the Nigerian military establishment. Naming exactly who holds power, and daring them to respond." },
+      { tier: "Start Here", title: "Get Up, Stand Up", artist: "Bob Marley", tag: "Democratic Culture / Citizen Participation", note: "One of Marley's most direct calls to action — insisting rights are claimed, not granted. Participation as something you do, not something you're given." },
+      { tier: "Start Here", title: "Soweto Blues", artist: "Miriam Makeba", tag: "Marginalised Groups", note: "Written about the 1976 Soweto uprising, when police killed schoolchildren protesting — Makeba turned grief into testimony for people the state tried to silence twice." },
+      { tier: "Discovery", title: "Hoggar (album)", artist: "Tinariwen", tag: "Marginalised Groups", note: "Grammy-winning Tuareg musical pioneers — a recent release, not yet a classic. Explore the album, not just one song. Tinariwen's own history is inseparable from Tuareg displacement and rebellion across the Sahel." },
     ],
     watch: [
-      { title: "The Battle of Algiers", where: null, tag: "Constitutional Change of Government", desc: "A landmark 1966 reconstruction of Algeria's uprising against French colonial rule — how a population organises against an occupying power." },
-      { title: "Mandela: Long Walk to Freedom", where: null, tag: "Constitutional Change of Government + Democratic Culture", desc: "Mandela's own account of the fight against apartheid — from imprisonment to South Africa's first democratic election." },
+      { title: "The Battle of Algiers", where: null, tag: "Constitutional Change of Government", desc: "A landmark 1966 reconstruction of Algeria's uprising against French colonial rule — how a population organises against an occupying power. Constitutional change from the ground up, not the top down." },
+      { title: "Mandela: Long Walk to Freedom", where: null, tag: "Constitutional Change of Government + Democratic Culture", desc: "Mandela's own account of the fight against apartheid — from imprisonment to South Africa's first democratic election. The whole arc of constitutional change compressed into one life." },
     ],
     read: {
       title: "The Wretched of the Earth",
@@ -1162,12 +1163,12 @@ const ROOM_CONTENT = {
       },
     ],
     listen: [
-      { tier: "Start Here", title: "Pata Pata", artist: "Miriam Makeba", tag: "Democratic Culture", note: "Makeba's best-known international hit — proof a song could cross the world without losing its South African footing." },
-      { tier: "Discovery", title: "Lagô", artist: "wordsofAzia", tag: "Democratic Culture", note: "Her most-streamed track — about transmission and inheritance, performed with her mother." },
-      { tier: "Supporting", title: "Glory / Oyè wossô / Than All / Liwouho / Sehkeyoulou / ah zouzou oh!", artist: "wordsofAzia", tag: null, note: "Including 'Oyè Wossô,' built from traditional Bhété chants, and 'Liwouho,' filmed in Lamu, Kenya, to connect Ivorian and Swahili culture directly." },
+      { tier: "Start Here", title: "Pata Pata", artist: "Miriam Makeba", tag: "Democratic Culture", note: "Makeba's best-known international hit — proof a song could cross the world without losing its South African footing. Culture travelling outward without needing to be diluted to do it." },
+      { tier: "Discovery", title: "Lagô", artist: "wordsofAzia", tag: "Democratic Culture", note: "Her most-streamed track — about transmission and inheritance, performed with her mother. Two generations, one song — inheritance as its own form of dialogue." },
+      { tier: "Supporting", title: "Glory / Oyè wossô / Than All / Liwouho / Sehkeyoulou / ah zouzou oh!", artist: "wordsofAzia", tag: "Democratic Culture", note: "Including 'Oyè Wossô,' built from traditional Bhété chants, and 'Liwouho,' filmed in Lamu, Kenya, to connect Ivorian and Swahili culture directly. Building the actual bridge, one collaboration at a time." },
     ],
     watch: [
-      { title: "The Wedding Party", where: null, tag: "Democratic Culture", desc: "Uses family, class, religion, and social relationships to explore how people negotiate difference and coexistence." },
+      { title: "The Wedding Party", where: null, tag: "Democratic Culture", desc: "Uses family, class, religion, and social relationships to explore how people negotiate difference and coexistence. A wedding as democratic culture in miniature — everyone with competing claims, still finding a way to be in the room together." },
     ],
     read: {
       title: "Americanah",
@@ -1175,7 +1176,7 @@ const ROOM_CONTENT = {
       where: null,
       desc: "Moves between Nigeria and the US; migration, race, identity, belonging.",
       tag: "Marginalised Groups + Democratic Culture",
-      acdegText: "Explores migration, identity, race, belonging, and navigating different social systems.",
+      acdegText: "Understanding two worlds well enough to move between them without losing either one — that's what bridging actually requires, not just tolerating difference from a distance.",
     },
     poetry: {
       title: "Nativity",
