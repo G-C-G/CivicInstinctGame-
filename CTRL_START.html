@@ -823,9 +823,10 @@ function OrgEntry({ org, ink, isFirst }) {
     { className: "py-4", style: { borderTop: isFirst ? "none" : HAIRLINE } },
     el("p", { className: "text-base font-semibold", style: { color: K } }, org.name),
     org.desc ? el("p", { className: "text-sm leading-relaxed mt-1", style: { color: K, opacity: 0.75 } }, org.desc) : null,
+    org.source ? el("p", { className: "text-[11px] uppercase tracking-[0.1em] mt-1.5", style: { color: J } }, "Source — " + org.source) : null,
     org.url
       ? el("div", { className: "mt-1.5" }, el(SearchLink, { href: org.url }, "Learn more / volunteer"))
-      : el("p", { className: "text-[13px] italic mt-1", style: { color: J } }, "No verified website yet — ask a facilitator for contact details."),
+      : el("p", { className: "text-[13px] italic mt-1.5", style: { color: J } }, "No verified website yet — ask a facilitator for contact details."),
   );
 }
 
@@ -938,12 +939,12 @@ const ROOM_CONTENT = {
     },
     act: {
       orgs: [
-        { name: "Tide Turners", desc: "A UN Environment Programme youth movement, active in Ghana through local partners, training young people to fight plastic pollution.", url: "https://www.unep.org/topics/youth-education-and-environment/tide-turners/" },
-        { name: "GYEM", desc: "Ghana Youth Environmental Movement — mobilises young people across Ghana for environmental advocacy and climate action.", url: "https://gyemgh.org/" },
-        { name: "SYND", desc: "Strategic Youth Network for Development — advocates for youth inclusion in forestry, climate, and energy governance.", url: "https://syndghana.org/" },
-        { name: "SWK Ghana", desc: null, url: null },
-        { name: "AKO Foundation", desc: "A youth-led Accra organisation working on plastic pollution, climate-smart agriculture, and gender and climate policy.", url: "https://akofoundation.com/" },
-        { name: "Upper Foods", desc: "A Ghanaian social enterprise processing locally grown tomatoes in the Upper East Region, creating jobs in a farming community.", url: "https://upperfoodsgh.com/" },
+        { name: "Tide Turners", desc: "A UN Environment Programme youth movement, active in Ghana through local partners, training young people to fight plastic pollution.", url: "https://www.unep.org/topics/youth-education-and-environment/tide-turners/", source: "unep.org" },
+        { name: "GYEM", desc: "Ghana Youth Environmental Movement — mobilises young people across Ghana for environmental advocacy and climate action.", url: "https://gyemgh.org/", source: "gyemgh.org" },
+        { name: "SYND", desc: "Strategic Youth Network for Development — advocates for youth inclusion in forestry, climate, and energy governance.", url: "https://syndghana.org/", source: "syndghana.org" },
+        { name: "SWK Ghana", desc: null, url: null, source: null },
+        { name: "AKO Foundation", desc: "A youth-led Accra organisation working on plastic pollution, climate-smart agriculture, and gender and climate policy.", url: "https://akofoundation.com/", source: "akofoundation.com" },
+        { name: "Upper Foods", desc: "A Ghanaian social enterprise processing locally grown tomatoes in the Upper East Region, creating jobs in a farming community.", url: "https://upperfoodsgh.com/", source: "upperfoodsgh.com" },
       ],
     },
   },
@@ -1011,12 +1012,12 @@ const ROOM_CONTENT = {
     },
     act: {
       orgs: [
-        { name: "GFD", desc: "Ghana Federation of Disability Organisations — the national umbrella body advocating for the rights of persons with disabilities.", url: "https://gfd.org.gh/" },
-        { name: "WODAO", desc: "Women With Disability Development and Advocacy Organization — champions the rights and economic empowerment of women and girls with disabilities.", url: "https://wodao.africa/" },
-        { name: "ADI", desc: "Africa Disability Institute (formerly VOICE Ghana) — researches and advocates for disability rights and inclusion across Africa.", url: "https://adinstitute.org/" },
-        { name: "ABAK Foundation", desc: "A Ghanaian NGO promoting disability inclusion, gender mainstreaming, and civic accountability.", url: null },
-        { name: "Ark Foundation Ghana", desc: "Ghana's first shelter and support organisation for women and children surviving domestic violence, abuse, and trafficking.", url: "https://arkfoundationghana.org/" },
-        { name: "NEWDA", desc: "Network of Women with Disabilities, Africa — gives women with disabilities a unified voice to push for rights and policy protections.", url: null },
+        { name: "GFD", desc: "Ghana Federation of Disability Organisations — the national umbrella body advocating for the rights of persons with disabilities.", url: "https://gfd.org.gh/", source: "gfd.org.gh" },
+        { name: "WODAO", desc: "Women With Disability Development and Advocacy Organization — champions the rights and economic empowerment of women and girls with disabilities.", url: "https://wodao.africa/", source: "wodao.africa" },
+        { name: "ADI", desc: "Africa Disability Institute (formerly VOICE Ghana) — researches and advocates for disability rights and inclusion across Africa.", url: "https://adinstitute.org/", source: "adinstitute.org" },
+        { name: "ABAK Foundation", desc: "A Ghanaian NGO promoting disability inclusion, gender mainstreaming, and civic accountability.", url: null, source: "Ghana News Agency (multiple reports, 2025–2026)" },
+        { name: "Ark Foundation Ghana", desc: "Ghana's first shelter and support organisation for women and children surviving domestic violence, abuse, and trafficking.", url: "https://arkfoundationghana.org/", source: "arkfoundationghana.org" },
+        { name: "NEWDA", desc: "Network of Women with Disabilities, Africa — gives women with disabilities a unified voice to push for rights and policy protections.", url: null, source: "Ghana News Agency, MyJoyOnline, Business Ghana" },
       ],
     },
   },
@@ -1090,13 +1091,13 @@ const ROOM_CONTENT = {
     },
     act: {
       orgs: [
-        { name: "CDD-Ghana", desc: "Ghana Center for Democratic Development — an independent think tank using research and civic dialogue to strengthen democracy.", url: "https://cddgh.org/" },
-        { name: "Penplusbytes", desc: "A Ghanaian civic-tech nonprofit using digital technology and media training to promote accountability and fight disinformation.", url: "https://penplusbytes.org/" },
-        { name: "FactSpace West Africa", desc: "Fact-checks claims and maps disinformation across Ghana, Nigeria, and neighbouring countries.", url: "https://factspace.org/" },
-        { name: "GhanaFact", desc: "Ghana's independent fact-checking platform, verifying political claims and scams circulating online.", url: "https://ghanafact.com/" },
-        { name: "MFWA", desc: "Media Foundation for West Africa — defends press freedom and media independence across all 16 West African countries.", url: "https://mfwa.org/" },
-        { name: "WACSI", desc: "West Africa Civil Society Institute — builds the capacity of civil society organisations across the region to engage in policy and governance.", url: "https://wacsi.org/" },
-        { name: "CSEA", desc: null, url: null },
+        { name: "CDD-Ghana", desc: "Ghana Center for Democratic Development — an independent think tank using research and civic dialogue to strengthen democracy.", url: "https://cddgh.org/", source: "cddgh.org" },
+        { name: "Penplusbytes", desc: "A Ghanaian civic-tech nonprofit using digital technology and media training to promote accountability and fight disinformation.", url: "https://penplusbytes.org/", source: "penplusbytes.org" },
+        { name: "FactSpace West Africa", desc: "Fact-checks claims and maps disinformation across Ghana, Nigeria, and neighbouring countries.", url: "https://factspace.org/", source: "factspace.org; en.wikipedia.org" },
+        { name: "GhanaFact", desc: "Ghana's independent fact-checking platform, verifying political claims and scams circulating online.", url: "https://ghanafact.com/", source: "ghanafact.com" },
+        { name: "MFWA", desc: "Media Foundation for West Africa — defends press freedom and media independence across all 16 West African countries.", url: "https://mfwa.org/", source: "mfwa.org; en.wikipedia.org" },
+        { name: "WACSI", desc: "West Africa Civil Society Institute — builds the capacity of civil society organisations across the region to engage in policy and governance.", url: "https://wacsi.org/", source: "wacsi.org" },
+        { name: "CSEA", desc: null, url: null, source: null },
       ],
     },
   },
@@ -1167,11 +1168,11 @@ const ROOM_CONTENT = {
     },
     act: {
       orgs: [
-        { name: "Democracy Hub", desc: "A Ghanaian civil-society group organising protests and legal action to demand government transparency and accountability.", url: null },
-        { name: "#FixTheCountry", desc: "A non-partisan Ghanaian youth movement that organised mass protests against economic hardship, demanding government accountability.", url: "https://fixthecountrygh.com/" },
-        { name: "Ghana Integrity Initiative (now Transparency International Ghana)", desc: "Ghana's chapter of Transparency International, working to combat corruption and promote accountability.", url: "https://www.tighana.org/" },
-        { name: "CODEO", desc: "Coalition of Domestic Election Observers — Ghana's largest domestic election-observer network, monitoring elections for fairness.", url: "https://codeoghana.org/" },
-        { name: "NCCE", desc: "National Commission for Civic Education — the constitutional body educating citizens on their rights and responsibilities in a democracy.", url: "https://www.nccegh.org/" },
+        { name: "Democracy Hub", desc: "A Ghanaian civil-society group organising protests and legal action to demand government transparency and accountability.", url: null, source: "Ghana news coverage (ModernGhana, Daily Graphic, CDD-Ghana)" },
+        { name: "#FixTheCountry", desc: "A non-partisan Ghanaian youth movement that organised mass protests against economic hardship, demanding government accountability.", url: "https://fixthecountrygh.com/", source: "fixthecountrygh.com; Participedia" },
+        { name: "Ghana Integrity Initiative (now Transparency International Ghana)", desc: "Ghana's chapter of Transparency International, working to combat corruption and promote accountability.", url: "https://www.tighana.org/", source: "tighana.org; transparency.org" },
+        { name: "CODEO", desc: "Coalition of Domestic Election Observers — Ghana's largest domestic election-observer network, monitoring elections for fairness.", url: "https://codeoghana.org/", source: "codeoghana.org; en.wikipedia.org" },
+        { name: "NCCE", desc: "National Commission for Civic Education — the constitutional body educating citizens on their rights and responsibilities in a democracy.", url: "https://www.nccegh.org/", source: "nccegh.org; en.wikipedia.org" },
       ],
     },
   },
@@ -1242,11 +1243,11 @@ const ROOM_CONTENT = {
     },
     act: {
       orgs: [
-        { name: "WANEP-Ghana", desc: "West Africa Network for Peacebuilding, Ghana — works to prevent, resolve, and transform violent conflict.", url: "https://wanepghana.org/" },
-        { name: "KAIPTC", desc: "Kofi Annan International Peacekeeping Training Centre — trains peacekeepers and mediators from across West Africa.", url: "https://www.kaiptc.org/" },
-        { name: "FOSDA / Women Mediators Network Ghana", desc: "Foundation for Security and Development in Africa — builds women's leadership in peacebuilding and mediation.", url: "https://fosda.org/" },
-        { name: "CDD-Ghana", desc: "Ghana Center for Democratic Development — an independent think tank using research and civic dialogue to strengthen democracy.", url: "https://cddgh.org/" },
-        { name: "NCCE", desc: "National Commission for Civic Education — the constitutional body educating citizens on their rights and responsibilities in a democracy.", url: "https://www.nccegh.org/" },
+        { name: "WANEP-Ghana", desc: "West Africa Network for Peacebuilding, Ghana — works to prevent, resolve, and transform violent conflict.", url: "https://wanepghana.org/", source: "wanepghana.org; wanep.org" },
+        { name: "KAIPTC", desc: "Kofi Annan International Peacekeeping Training Centre — trains peacekeepers and mediators from across West Africa.", url: "https://www.kaiptc.org/", source: "kaiptc.org; en.wikipedia.org" },
+        { name: "FOSDA / Women Mediators Network Ghana", desc: "Foundation for Security and Development in Africa — builds women's leadership in peacebuilding and mediation.", url: "https://fosda.org/", source: "fosda.org" },
+        { name: "CDD-Ghana", desc: "Ghana Center for Democratic Development — an independent think tank using research and civic dialogue to strengthen democracy.", url: "https://cddgh.org/", source: "cddgh.org" },
+        { name: "NCCE", desc: "National Commission for Civic Education — the constitutional body educating citizens on their rights and responsibilities in a democracy.", url: "https://www.nccegh.org/", source: "nccegh.org; en.wikipedia.org" },
       ],
     },
   },
