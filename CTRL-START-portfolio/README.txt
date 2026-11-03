@@ -1,31 +1,24 @@
-CTRL + START — portfolio images
+CTRL + START — client portfolio pictures
 
-WHAT IT IS
-CTRL + START is an interactive experience for exhibition visitors. Visitors answer five
-short everyday scenarios. The answers show which of five civic instincts they reach for
-first: Maker, Caregiver, Seeker, Challenger or Bridger. Each instinct opens a "room" with
-people, music, film, books, poetry, art and real organisations in Ghana and West Africa
-to explore and join.
+1-what-it-is                What it is
+2-why-it-matters            Why it matters
+3-what-makes-it-different   What makes it different
+4-who-its-for               Who it is for
+5-what-it-aims-to-achieve   What it aims to achieve
+6-the-visitor-journey       What a visitor sees
+7-the-five-instincts        The five rooms
+8-inside-a-room             What is inside a room
+CTRL-START-portfolio.pdf    All of the above in one file, plus a page with the link
 
-LINK
-Source code: https://github.com/g-c-g/civicinstinctgame-
-Live demo:   [ADD LINK] (the GitHub Pages address was not working when checked)
+Link: https://github.com/g-c-g/civicinstinctgame-
+(Live demo link: add when available. The GitHub Pages address returned 404.)
 
-THE SIX MAIN IMAGES (use in this order)
-1-what-it-is.png            Title and one-line explanation
-2-how-it-works.png          What a visitor sees, step by step
-3-the-five-rooms.png        The five possible results
-4-inside-a-room.png         What is inside a room
-5-ties-and-other-rooms.png  What happens with a tie, and how to visit other rooms
-6-the-five-doors.png        The five instincts and their guiding questions
+ADD YOUR OWN WORDS (not recorded in the project files)
+My role:  [what you did]
+Made for: [who it was made for]
+Result:   [visitors or feedback, if any]
 
-screens/  Single screenshots from the real game, if you want your own layout.
-
-ADD YOUR OWN WORDS (this project's files do not record these)
-My role:    [what you did]
-Made for:   [who it was for / who you worked with]
-Result:     [visitors, plays or feedback, if you have it]
-
-CHECK BEFORE PUBLISHING
-Image 4 and screens/room-people.png and room-art.png show portraits and artworks by other
-people. Confirm you have permission to show them, or leave those out.
+BEFORE PUBLISHING
+Picture 8 shows portraits and artworks by other people. Confirm permission or leave it out.
+Pictures 4 and 5 and 6 use only the interface and the room doors.
+Audience wording on picture 4 ("hosts and partners") is my reading of the project, not stated in the files. Check it.
